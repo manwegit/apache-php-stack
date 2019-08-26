@@ -2,12 +2,18 @@ version: '2'
 services:
     php-apache:
         image: php:7.2.1-apache
+        restart: always
+        environment:
+            - "VIRTUAL_HOST=${SITE}"
+            - "LETSENCRYPT_HOST=${SITE}"
+            - "LETSENCRYPT_EMAIL=${EMAIL}"        
         expose:
             - 80
         volumes:
-            - /tmp/DocumentRoot:/var/www/html:z
+            - /mnt/storage/docker/www-sites/${SITE}/www:/var/www/html:z
         links:
             - 'mariadb'
+
 
     mariadb:
         image: mariadb:10.1
@@ -23,3 +29,8 @@ services:
 
 volumes:
     mariadb:
+    
+networks:
+    default:
+        external:
+            name: www
