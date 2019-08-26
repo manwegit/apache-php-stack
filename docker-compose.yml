@@ -1,7 +1,9 @@
 version: '2'
 services:
     php-apache:
-        image: php:7.2.1-apache
+        #image: php:7.2.1-apache
+        build:
+            context: ./php-apache
         restart: always
         environment:
             - "VIRTUAL_HOST=${SITE}"
@@ -11,25 +13,28 @@ services:
             - 80
         volumes:
             - /mnt/storage/docker/www-sites/${SITE}/www:/var/www/html:z
-        links:
-            - 'mariadb'
+        networks:
+          - default
+
+        #links:
+            #- 'mariadb'
 
 
-    mariadb:
-        image: mariadb:10.1
-        volumes:
-            - mariadb:/var/lib/mysql
-        environment:
-            TZ: "Europe/Rome"
-            MYSQL_ALLOW_EMPTY_PASSWORD: "no"
-            MYSQL_ROOT_PASSWORD: "rootpwd"
-            MYSQL_USER: 'testuser'
-            MYSQL_PASSWORD: 'testpassword'
-            MYSQL_DATABASE: 'testdb'
+    #mariadb:
+        #image: mariadb:10.1
+        #volumes:
+            #- mariadb:/var/lib/mysql
+        #environment:
+            #TZ: "Europe/Rome"
+            #MYSQL_ALLOW_EMPTY_PASSWORD: "no"
+            #MYSQL_ROOT_PASSWORD: "rootpwd"
+            #MYSQL_USER: 'testuser'
+            #MYSQL_PASSWORD: 'testpassword'
+            #MYSQL_DATABASE: 'testdb'
 
-volumes:
-    mariadb:
-    
+#volumes:
+    #mariadb:
+
 networks:
     default:
         external:
